@@ -35,7 +35,13 @@ def create_app() -> FastAPI:
     app.include_router(settings.router, prefix="/api")
 
     @app.get("/health", tags=["system"])
-    async def health_check() -> dict[str, str]:
-        return {"status": "ok"}
+    async def health_check() -> dict:
+        from utils.config import settings
+        return {
+            "status": "ok",
+            "app": settings.app_name,
+            "version": "0.1.0",
+            "environment": settings.environment,
+        }
 
     return app
