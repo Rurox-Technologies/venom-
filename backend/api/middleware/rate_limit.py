@@ -10,7 +10,7 @@ from starlette.responses import JSONResponse
 
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
-    """Limits requests per IP using a sliding window counter."""
+    """Limits requests per IP using a sliding window counter with rate limit headers."""
 
     def __init__(self, app: FastAPI, max_requests: int = 60, window_seconds: int = 60) -> None:
         super().__init__(app)
@@ -28,6 +28,16 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             return JSONResponse(
                 status_code=429,
                 content={"detail": "Rate limit exceeded. Try again later."},
+                headers={
+                    "X-RateLimit-Limit": str(self.max_requests),
+                    "X-RateLimit-Remaining": "0",
+                    "X-RateLimit-Reset": str(int(window_start + self.window_seconds)),
+                },
             )
         timestamps.append(now)
-        return await call_next(request)
+        remaining = max(0, self.max_requests - len(timestamps))
+        response = await call_next(request)
+        response.headers["X-RateLimit-Limit"] = str(self.max_requests)
+        response.headers["X-RateLimit-Remaining"] = str(remaining)
+        response.headers["X-RateLimit-Reset"] = str(int(window_start + self.window_seconds))
+        return response
