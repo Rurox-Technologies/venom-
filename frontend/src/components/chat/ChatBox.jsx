@@ -1,13 +1,13 @@
-﻿"use client";
+﻿"use client"
 
-import { motion } from "framer-motion";
-import MessageBubble from "./MessageBubble";
-import TypingAnimation from "./TypingAnimation";
-import ChatInput from "./ChatInput";
-import { useChat } from "../../hooks/useChat";
+import { motion } from "framer-motion"
+import MessageBubble from "./MessageBubble"
+import TypingAnimation from "./TypingAnimation"
+import ChatInput from "./ChatInput"
+import { useChat } from "../../hooks/useChat"
 
 export default function ChatBox() {
-  const { messages, isTyping, isStreaming } = useChat();
+  const { messages, isTyping, isStreaming } = useChat()
 
   return (
     <div className="cyber-panel scan-line flex h-full min-h-[420px] flex-col p-3">
@@ -18,8 +18,8 @@ export default function ChatBox() {
 
       <div className="flex-1 space-y-3 overflow-y-auto pr-1">
         {messages.map((item, index) => (
-          <motion.div key={item.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.02 }}>
-            <MessageBubble role={item.role} text={item.text} createdAt={item.createdAt} />
+          <motion.div key={item.id || index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.02 }}>
+            <MessageBubble role={item.role} text={item.text} content={item.content} createdAt={item.createdAt} timestamp={item.timestamp} />
           </motion.div>
         ))}
         <TypingAnimation visible={isTyping} />
@@ -27,5 +27,5 @@ export default function ChatBox() {
 
       <ChatInput />
     </div>
-  );
+  )
 }

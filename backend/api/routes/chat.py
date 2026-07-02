@@ -3,7 +3,7 @@
 import json
 import os
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 from models.request_models import ChatRequest
 from utils.helpers import utc_now_iso
@@ -29,7 +29,14 @@ def _save_message(session_id: str, user_msg: str, reply: str) -> None:
 
 
 @router.post("/message")
-async def send_message(payload: ChatRequest) -> dict[str, str]:
-    reply = f"Placeholder response for: {payload.message}"
+async def send_message(payload: ChatRequest, request: Request) -> dict[str, str]:
+    assistant = request.app.state.assistant
+    reply = await assistant.respond(
+        user_message=payload.message,
+        session_id=payload.session_id,
+        user_id=payload.user_id,
+        language=payload.language.value if hasattr(payload.language, "value") else str(payload.language),
+        mode=payload.mode.value if hasattr(payload.mode, "value") else str(payload.mode),
+    )
     _save_message(payload.session_id, payload.message, reply)
-    return {"reply": reply}
+    return {"reply": reply, "session_id": payload.session_id}

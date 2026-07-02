@@ -1,9 +1,20 @@
-﻿"use client";
+﻿"use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react"
 
-export function useMemory() {
-  const [memoryItems, setMemoryItems] = useState([]);
+const API = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
 
-  return { memoryItems, setMemoryItems };
+export default function useMemory() {
+  const [memoryItems, setMemoryItems] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch(`${API}/api/memory/summary`)
+      .then((r) => r.json())
+      .then((data) => setMemoryItems(data.facts || []))
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
+  return { memoryItems, loading }
 }

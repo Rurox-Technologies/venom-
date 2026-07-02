@@ -2,10 +2,13 @@
 
 from fastapi import APIRouter
 
+from brain.personality import PersonalityManager
+
 router = APIRouter(prefix="/modes", tags=["modes"])
+
+_pm = PersonalityManager()
 
 
 @router.get("")
-async def list_modes() -> dict[str, list[str]]:
-    # TODO: Fetch dynamic modes from persistent settings.
-    return {"modes": ["balanced", "creative", "concise"]}
+async def list_modes() -> dict:
+    return {"modes": _pm.list_modes()}

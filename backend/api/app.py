@@ -9,6 +9,11 @@ from api.middleware.error_handler import register_error_handlers
 from api.middleware.logging_middleware import LoggingMiddleware
 from api.middleware.rate_limit import RateLimitMiddleware
 from api.routes import chat, conversations, memory, modes, settings, voice
+from brain.assistant import AssistantService
+from brain.providers.ollama_provider import OllamaProvider
+from brain.providers.openrouter_provider import OpenRouterProvider
+from brain.router import ModelRouter
+from utils.config import settings as app_settings
 
 
 def create_app() -> FastAPI:
@@ -25,6 +30,11 @@ def create_app() -> FastAPI:
     app.add_middleware(RateLimitMiddleware, max_requests=60, window_seconds=60)
     app.add_middleware(LoggingMiddleware)
 
+    primary = OpenRouterProvider()
+    fallback = OllamaProvider()
+    router = ModelRouter(primary_provider=primary, fallback_provider=fallback)
+    app.state.assistant = AssistantService(router=router)
+
     register_error_handlers(app)
 
     app.include_router(chat.router, prefix="/api")
@@ -36,12 +46,11 @@ def create_app() -> FastAPI:
 
     @app.get("/health", tags=["system"])
     async def health_check() -> dict:
-        from utils.config import settings
         return {
             "status": "ok",
-            "app": settings.app_name,
+            "app": app_settings.app_name,
             "version": "0.1.0",
-            "environment": settings.environment,
+            "environment": app_settings.environment,
         }
 
     return app

@@ -1,9 +1,8 @@
 """Server-Sent Events endpoint for streaming chat responses."""
 
-import asyncio
 import json
-
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+from fastapi.responses import StreamingResponse
 
 from models.request_models import ChatRequest
 
@@ -11,17 +10,18 @@ router = APIRouter(prefix="/stream", tags=["stream"])
 
 
 @router.post("/chat")
-async def stream_chat(payload: ChatRequest):
-    """Stream a chat response token by token using SSE."""
+async def stream_chat(payload: ChatRequest, request: Request):
+    assistant = request.app.state.assistant
 
     async def event_generator():
-        sample = f"Response to: {payload.message}"
-        words = sample.split()
-        for i, word in enumerate(words):
-            chunk = {"token": word + (" " if i < len(words) - 1 else ""), "done": False}
-            yield f"data: {json.dumps(chunk)}\n\n"
-            await asyncio.sleep(0.05)
+        async for token in assistant.respond_stream(
+            user_message=payload.message,
+            session_id=payload.session_id,
+            user_id=payload.user_id,
+            language=payload.language.value if hasattr(payload.language, "value") else str(payload.language),
+            mode=payload.mode.value if hasattr(payload.mode, "value") else str(payload.mode),
+        ):
+            yield f"data: {json.dumps({'token': token, 'done': False})}\n\n"
         yield f"data: {json.dumps({'token': '', 'done': True})}\n\n"
 
-    from fastapi.responses import StreamingResponse
     return StreamingResponse(event_generator(), media_type="text/event-stream")
