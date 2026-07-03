@@ -14,6 +14,9 @@ from brain.providers.ollama_provider import OllamaProvider
 from brain.providers.openrouter_provider import OpenRouterProvider
 from brain.router import ModelRouter
 from utils.config import settings as app_settings
+from voice.speech_to_text import SpeechToTextService
+from voice.text_to_speech import TextToSpeechService
+from voice.audio_manager import AudioManager
 
 
 def create_app() -> FastAPI:
@@ -34,6 +37,10 @@ def create_app() -> FastAPI:
     fallback = OllamaProvider()
     router = ModelRouter(primary_provider=primary, fallback_provider=fallback)
     app.state.assistant = AssistantService(router=router)
+
+    app.state.stt_service = SpeechToTextService()
+    app.state.tts_service = TextToSpeechService()
+    app.state.audio_manager = AudioManager()
 
     register_error_handlers(app)
 

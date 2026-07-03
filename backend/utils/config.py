@@ -9,11 +9,17 @@ class Settings(BaseSettings):
     app_name: str = "Venom"
     environment: str = "development"
     openrouter_api_key: str = ""
+    openai_api_key: str = ""
     ollama_base_url: str = "http://localhost:11434"
     cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
     rate_limit_max: int = 60
     rate_limit_window: int = 60
     log_level: str = "INFO"
+    stt_provider: str = "whisper"
+    tts_provider: str = "openai"
+    tts_voice: str = "alloy"
+    wake_word_enabled: bool = False
+    audio_max_size_mb: int = 25
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
