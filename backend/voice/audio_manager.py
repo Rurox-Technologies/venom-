@@ -49,7 +49,8 @@ class AudioManager:
                     wf.setframerate(target_rate)
                     wf.writeframes(frames)
                 return out.getvalue()
-        except wave.Error:
+        except (wave.Error, OSError):
+            logger.warning("Could not normalize non-WAV audio, passing through")
             return audio_data
 
     def estimate_duration(self, audio_data: bytes, sample_rate: int = 16000) -> float:

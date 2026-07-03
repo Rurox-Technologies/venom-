@@ -17,6 +17,7 @@ from utils.config import settings as app_settings
 from voice.speech_to_text import SpeechToTextService
 from voice.text_to_speech import TextToSpeechService
 from voice.audio_manager import AudioManager
+from voice.wakeword import WakeWordDetector
 
 
 def create_app() -> FastAPI:
@@ -41,6 +42,7 @@ def create_app() -> FastAPI:
     app.state.stt_service = SpeechToTextService()
     app.state.tts_service = TextToSpeechService()
     app.state.audio_manager = AudioManager()
+    app.state.wake_word_detector = WakeWordDetector()
 
     register_error_handlers(app)
 

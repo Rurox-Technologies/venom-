@@ -1,5 +1,4 @@
 import "./globals.css";
-import "./reference.css";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { ChatProvider } from "../context/ChatContext";
 import { SettingsProvider } from "../context/SettingsContext";
@@ -18,7 +17,7 @@ const jetBrainsMono = JetBrains_Mono({
 
 export const metadata = {
   title: "Venom AI Assistant",
-  description: "Reference Venom UI with backend integration",
+  description: "Hybrid personality-driven AI assistant with cloud and local inference",
 };
 
 export default function RootLayout({ children }) {

@@ -1,5 +1,7 @@
 ﻿"""Voice endpoints for speech-driven interactions."""
 
+import base64
+
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import Response
 from fastapi import UploadFile
@@ -26,6 +28,19 @@ async def transcribe_audio(request: Request, file: UploadFile | None = None) -> 
     if not text:
         raise HTTPException(status_code=501, detail="Speech-to-text not configured. Set OPENAI_API_KEY.")
     return {"text": text}
+
+
+@router.post("/detect-wake-word")
+async def detect_wake_word(request: Request, audio: str = "") -> dict:
+    if not audio:
+        raise HTTPException(status_code=400, detail="No audio data provided")
+    try:
+        audio_bytes = base64.b64decode(audio)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid base64 audio data")
+    detector = request.app.state.wake_word_detector
+    detected = await detector.detect(audio_bytes)
+    return {"detected": detected}
 
 
 @router.post("/speak")

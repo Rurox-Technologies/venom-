@@ -1,6 +1,6 @@
 ﻿"use client"
 
-import { createContext, useContext, useMemo, useState, useCallback, useRef } from "react"
+import { createContext, useContext, useMemo, useState, useCallback, useRef, useEffect } from "react"
 import { sendChatMessage, listConversations as fetchConversations, getConversation } from "../lib/api"
 
 const ChatContext = createContext(null)
@@ -20,7 +20,7 @@ export function ChatProvider({ children }) {
   const activeRef = useRef(activeConversationId)
   activeRef.current = activeConversationId
 
-  useState(() => {
+  useEffect(() => {
     fetchConversations()
       .then((convs) => {
         if (convs.length > 0) {
@@ -35,7 +35,7 @@ export function ChatProvider({ children }) {
       })
       .catch(() => {})
       .finally(() => setLoaded(true))
-  })
+  }, [])
 
   const createConversation = () => {
     const id = `conv-${crypto.randomUUID()}`
