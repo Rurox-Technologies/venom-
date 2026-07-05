@@ -8,7 +8,23 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.middleware.error_handler import register_error_handlers
 from api.middleware.logging_middleware import LoggingMiddleware
 from api.middleware.rate_limit import RateLimitMiddleware
-from api.routes import chat, conversations, memory, modes, settings, voice
+from api.routes import (
+    bookmarks,
+    chat,
+    conversations,
+    export,
+    files,
+    health_detail,
+    memory,
+    metrics,
+    modes,
+    performance,
+    search,
+    settings,
+    stream,
+    voice,
+    ws,
+)
 from brain.assistant import AssistantService
 from brain.providers.ollama_provider import OllamaProvider
 from brain.providers.openrouter_provider import OpenRouterProvider
@@ -52,6 +68,15 @@ def create_app() -> FastAPI:
     app.include_router(memory.router, prefix="/api")
     app.include_router(modes.router, prefix="/api")
     app.include_router(settings.router, prefix="/api")
+    app.include_router(bookmarks.router, prefix="/api")
+    app.include_router(export.router, prefix="/api")
+    app.include_router(files.router, prefix="/api")
+    app.include_router(health_detail.router)
+    app.include_router(metrics.router, prefix="/api")
+    app.include_router(performance.router, prefix="/api")
+    app.include_router(search.router, prefix="/api")
+    app.include_router(stream.router, prefix="/api")
+    app.include_router(ws.router)
 
     @app.get("/health", tags=["system"])
     async def health_check() -> dict:
