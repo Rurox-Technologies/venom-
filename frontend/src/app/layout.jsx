@@ -2,6 +2,7 @@ import "./globals.css";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { ChatProvider } from "../context/ChatContext";
 import { SettingsProvider } from "../context/SettingsContext";
+import { ThemeProvider } from "../context/ThemeContext";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -24,9 +25,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
       <body className={`${spaceGrotesk.variable} ${jetBrainsMono.variable} antialiased`}>
-        <SettingsProvider>
-          <ChatProvider>{children}</ChatProvider>
-        </SettingsProvider>
+        <ThemeProvider>
+          <SettingsProvider>
+            <ChatProvider>{children}</ChatProvider>
+          </SettingsProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
