@@ -2,7 +2,7 @@
 
 import { useSettings } from "../../context/SettingsContext";
 
-const modes = ["Friendly", "Professional", "Sarcastic", "Chaos"];
+const modes = ["Balanced", "Creative", "Concise", "Friendly", "Professional", "Sarcastic", "Chaos"];
 
 export default function PersonalitySelector() {
   const { personalityMode, setPersonalityMode } = useSettings();
