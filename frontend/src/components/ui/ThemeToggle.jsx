@@ -10,7 +10,7 @@ export default function ThemeToggle({ theme, onToggle }) {
           theme === "light" ? "translate-x-7" : "translate-x-0"
         }`}
       >
-        {theme === "dark" ? "!" : "^"}
+        {theme === "dark" ? "\u263e" : "\u2600"}
       </span>
     </button>
   )
