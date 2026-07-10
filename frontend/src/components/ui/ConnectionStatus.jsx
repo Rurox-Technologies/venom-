@@ -4,12 +4,10 @@ import { useState, useEffect, useCallback } from "react"
 
 export default function ConnectionStatus() {
   const [online, setOnline] = useState(true)
-  const [lastOnline, setLastOnline] = useState(null)
   const [showReconnected, setShowReconnected] = useState(false)
 
   const handleOnline = useCallback(() => {
     setOnline(true)
-    setLastOnline(Date.now())
     setShowReconnected(true)
     setTimeout(() => setShowReconnected(false), 3000)
   }, [])
