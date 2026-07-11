@@ -5,14 +5,18 @@ export function useKeyboard(keyMap, enabled = true) {
     (e) => {
       if (!enabled) return
       const key = e.key.toLowerCase()
-      const combo = `${e.ctrlKey || e.metaKey ? "mod+" : ""}${key}`
-      if (keyMap[key]) {
+      const hasMod = e.ctrlKey || e.metaKey
+      if (keyMap[key] && !hasMod) {
         e.preventDefault()
         keyMap[key](e)
+        return
       }
-      if (keyMap[combo]) {
-        e.preventDefault()
-        keyMap[combo](e)
+      if (hasMod) {
+        const combo = `mod+${key}`
+        if (keyMap[combo]) {
+          e.preventDefault()
+          keyMap[combo](e)
+        }
       }
     },
     [keyMap, enabled],
