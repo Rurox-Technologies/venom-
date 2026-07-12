@@ -1,6 +1,6 @@
 """Pydantic response schemas for API endpoints."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from pydantic import BaseModel
 
@@ -11,7 +11,7 @@ class ChatResponse(BaseModel):
 
     def model_post_init(self, _context) -> None:
         if not self.timestamp:
-            self.timestamp = datetime.utcnow().isoformat()
+            self.timestamp = datetime.now(timezone.utc).isoformat()
 
 
 class ErrorResponse(BaseModel):
