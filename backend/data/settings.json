@@ -1,4 +1,7 @@
 ﻿{
-  "default_mode": "balanced",
-  "default_language": "en"
+  "provider": "hybrid",
+  "personality": "balanced",
+  "language": "en",
+  "privacy_mode": false,
+  "memory_enabled": true
 }
