@@ -67,7 +67,7 @@ export function ChatProvider({ children }) {
     if (!activeRef.current) {
       setActiveConversationId(sessionId)
     }
-    const userMsg = { role: "user", content: text, timestamp: new Date().toISOString() }
+    const userMsg = { id: crypto.randomUUID(), role: "user", content: text, timestamp: new Date().toISOString() }
     setMessages((prev) => [...prev, userMsg])
     setIsTyping(true)
     setIsStreaming(true)
@@ -80,7 +80,7 @@ export function ChatProvider({ children }) {
         language: "en",
         mode: "balanced",
       })
-      const asstMsg = { role: "assistant", content: data.reply, timestamp: data.timestamp || new Date().toISOString() }
+      const asstMsg = { id: crypto.randomUUID(), role: "assistant", content: data.reply, timestamp: data.timestamp || new Date().toISOString() }
       setMessages((prev) => [...prev, asstMsg])
       setConversations((prev) => {
         const exists = prev.find((c) => c.session_id === sessionId)
@@ -88,7 +88,7 @@ export function ChatProvider({ children }) {
         return [...prev, { session_id: sessionId, title: buildTitle(text), messages: [] }]
       })
     } catch {
-      const errMsg = { role: "assistant", content: "Sorry, I encountered an error processing your request.", timestamp: new Date().toISOString() }
+      const errMsg = { id: crypto.randomUUID(), role: "assistant", content: "Sorry, I encountered an error processing your request.", timestamp: new Date().toISOString() }
       setMessages((prev) => [...prev, errMsg])
     } finally {
       setIsTyping(false)

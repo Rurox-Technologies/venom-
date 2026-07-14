@@ -10,11 +10,11 @@ export default function MemoryPanel() {
     <div className="space-y-2">
       {conversations.map((item) => (
         <HistoryItem
-          key={item.id}
+          key={item.session_id}
           label={item.title}
-          active={item.id === activeConversationId}
-          onSelect={() => setActiveConversationId(item.id)}
-          onDelete={() => deleteConversation(item.id)}
+          active={item.session_id === activeConversationId}
+          onSelect={() => setActiveConversationId(item.session_id)}
+          onDelete={() => deleteConversation(item.session_id)}
         />
       ))}
     </div>

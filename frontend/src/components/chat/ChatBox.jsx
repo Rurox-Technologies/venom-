@@ -19,7 +19,7 @@ export default function ChatBox() {
       <div className="flex-1 space-y-3 overflow-y-auto pr-1">
         {messages.map((item, index) => (
           <motion.div key={item.id || index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.02 }}>
-            <MessageBubble role={item.role} text={item.text} content={item.content} createdAt={item.createdAt} timestamp={item.timestamp} />
+            <MessageBubble role={item.role} content={item.content} timestamp={item.timestamp} />
           </motion.div>
         ))}
         <TypingAnimation visible={isTyping} />
