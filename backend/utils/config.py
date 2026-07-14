@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     wake_word_enabled: bool = False
     audio_max_size_mb: int = 25
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     def validate_environment(self) -> list[str]:
         warnings: list[str] = []
